@@ -1,0 +1,27 @@
+
+type DataEntry {
+  id: String!
+  title: String!
+  content: String!
+  views: Int!
+  timestamp: String!
+}
+
+input InputDataEntry {
+  id: String!
+  title: String!
+  content: String!
+  views: Int!
+  timestamp: String!
+}
+
+type Query {
+  getDataEntries: [DataEntry!]!
+  getDataEntry(id: String!): DataEntry!
+
+}
+
+type Mutation {
+  storeDataEntry(input: InputDataEntry!): DataEntry!
+}
+
