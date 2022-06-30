@@ -1,0 +1,13 @@
+# LoadBalancer Service. Will only work on supported cloud platforms (AKS, EKS, GKE, DOK, IBM, LKE etc...)
+# Listens externally on 80 and forwards to Pod/container on 8080
+apiVersion: v1
+kind: Service
+metadata:
+  name: exercise
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 3000
+    targetPort: 3000
+  selector:
+    app: web
