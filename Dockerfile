@@ -12,13 +12,18 @@ WORKDIR /build
 # Copy and download dependency using go mod
 COPY go.mod .
 COPY go.sum .
+COPY /server/repositories/db/migrations/ /dist/server/repositories/db/migrations/
 RUN go mod download
 
 # Copy the code into the container
 COPY . .
 
+
+
 # Build the application
 RUN go build -o main .
+
+
 
 # Move to /dist directory as the place for resulting binary folder
 WORKDIR /dist

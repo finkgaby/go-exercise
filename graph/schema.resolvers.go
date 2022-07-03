@@ -35,7 +35,11 @@ func (r *mutationResolver) StoreDataEntry(ctx context.Context, input model.Input
 }
 
 func (r *queryResolver) GetDataEntries(ctx context.Context) ([]*model.DataEntry, error) {
+	log.Printf("start GetDataEntries")
+	log.Printf("starting GetRepository")
 	rep, err := repositories.GetRepository(commons.RepositoryTypeDB)
+	log.Printf("finish GetRepository")
+
 	if err != nil {
 		log.Fatal(ctx, err, "Unable to get repository")
 	}

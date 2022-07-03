@@ -44,7 +44,10 @@ func NewDatabase(dbConfig Config) (*sql.DB, error) {
 		log.Fatal(ctx, err, "Error in validate db config")
 		return nil, err
 	}
+	log.Printf("waitForDatabase: %s", dbConfig)
 	dbServer, err := waitForDatabase(dbConfig, commons.ConnectionTimeout)
+	log.Printf("finish waitForDatabase")
+
 	if err != nil {
 		log.Fatal(ctx, err, "Error while wait for database")
 		return nil, err
@@ -139,7 +142,10 @@ func createDB(db *sql.DB, dbConfig Config) error {
 
 func toCreateDB(db *sql.DB, dbConfig Config) bool {
 	ctx := context.Background()
+	log.Printf("Start QueryRow: check if DB exists")
 	row := db.QueryRow(fmt.Sprintf(databaseExists, dbConfig.Database))
+	log.Printf("Start QueryRow: check if DB exists")
+
 	var exists bool
 	err := row.Scan(&exists)
 	if err != nil {
@@ -184,7 +190,9 @@ func openConnection(dbConfig Config, connectoToDb bool) (*sql.DB, error) {
 			"user=%s password=%s host=%s port=%s sslmode=disable",
 			dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port)
 	}
+	log.Printf("start open connection")
 	db, err := sql.Open(driverName, credentials)
+	log.Printf("finish open connection")
 	if err != nil {
 		log.Fatal(ctx, err, "Incorrect formatting string")
 		return nil, errors.New("Incorrect formatting string")
