@@ -35,14 +35,6 @@ func QuerySerialize(queryToSerialize string) string {
 	js.Publish(pubSubjectName, queryJSON)
 
 	log.Printf("Published queryJSON:%s to subjectName:%q", string(queryJSON), pubSubjectName)
-	//js.Subscribe(subSubjectName, func(msg *nats.Msg) {
-	//	msg.Ack()
-	//	var query string
-	//	err := json.Unmarshal(msg.Data, &query)
-	//	checkErr(err)
-	//	log.Printf("Subscriber fetched msg.Data:%s from subSubjectName:%q", string(msg.Data), msg.Subject)
-	//	serializedQuery = query
-	//}, nats.Durable("monitor"), nats.ManualAck())
 
 	sub, _ := js.PullSubscribe(subSubjectName, "queryReviewSubscriber", nats.PullMaxWaiting(1))
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
