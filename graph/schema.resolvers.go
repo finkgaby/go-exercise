@@ -51,6 +51,9 @@ func (r *queryResolver) GetDataEntries(ctx context.Context) ([]*model.DataEntry,
 
 func (r *queryResolver) GetDataEntry(ctx context.Context, id string) (*model.DataEntry, error) {
 
+	//TODO:
+	//query := cmns.QuerySerialize("")
+
 	rep, err := repositories.GetRepository(commons.RepositoryTypeDB)
 	if err != nil {
 		log.Fatal(ctx, err, "Unable to get repository")
