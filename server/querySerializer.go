@@ -15,8 +15,8 @@ const (
 )
 
 type Query struct {
-	query     string
-	subjectId string
+	Query     string
+	SubjectId string
 }
 
 func QuerySerialize(queryToSerialize string) string {
@@ -28,10 +28,10 @@ func QuerySerialize(queryToSerialize string) string {
 	checkErr(err)
 
 	query := Query{
-		query:     queryToSerialize,
-		subjectId: uuid.New().String(),
+		Query:     queryToSerialize,
+		SubjectId: uuid.New().String(),
 	}
-	queryJSON, err := json.Marshal(query.query)
+	queryJSON, err := json.Marshal(query)
 	js.Publish(pubSubjectName, queryJSON)
 
 	log.Printf("Published queryJSON:%s to subjectName:%q", string(queryJSON), pubSubjectName)
