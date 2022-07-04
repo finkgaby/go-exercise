@@ -1,4 +1,4 @@
-package commons
+package server
 
 import (
 	"encoding/json"
@@ -34,7 +34,7 @@ func QuerySerialize(queryToSerialize string) string {
 	js.Publish(fmt.Sprintf("(%s_%s)", pubSubjectName, query.subjectId), queryJSON)
 
 	log.Printf("Published queryJSON:%s to subjectName:%q", string(queryJSON), pubSubjectName)
-	js.Subscribe(fmt.Sprintf("(%s_%s)", subSubjectName, query.subjectId), func(msg *nats.Msg) {
+	x, err := js.Subscribe(fmt.Sprintf("(%s_%s)", subSubjectName, query.subjectId), func(msg *nats.Msg) {
 		msg.Ack()
 		var query Query
 		err := json.Unmarshal(msg.Data, &query)
@@ -43,6 +43,7 @@ func QuerySerialize(queryToSerialize string) string {
 		serializedQuery = query.query
 	}, nats.Durable("monitor"), nats.ManualAck())
 
+	log.Printf("%s", x)
 	return serializedQuery
 }
 

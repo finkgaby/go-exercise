@@ -58,7 +58,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		GetDataEntries func(childComplexity int) int
-		GetDataEntry   func(childComplexity int, id string) int
+		GetDataEntry   func(childComplexity int, query string) int
 	}
 }
 
@@ -67,7 +67,7 @@ type MutationResolver interface {
 }
 type QueryResolver interface {
 	GetDataEntries(ctx context.Context) ([]*model.DataEntry, error)
-	GetDataEntry(ctx context.Context, id string) (*model.DataEntry, error)
+	GetDataEntry(ctx context.Context, query string) (*model.DataEntry, error)
 }
 
 type executableSchema struct {
@@ -149,7 +149,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.GetDataEntry(childComplexity, args["id"].(string)), true
+		return e.complexity.Query.GetDataEntry(childComplexity, args["query"].(string)), true
 
 	}
 	return 0, false
@@ -239,7 +239,7 @@ input InputDataEntry {
 
 type Query {
   getDataEntries: [DataEntry!]!
-  getDataEntry(id: String!): DataEntry!
+  getDataEntry(query: String!): DataEntry!
 
 }
 
@@ -289,14 +289,14 @@ func (ec *executionContext) field_Query_getDataEntry_args(ctx context.Context, r
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["query"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("query"))
 		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["id"] = arg0
+	args["query"] = arg0
 	return args, nil
 }
 
@@ -695,7 +695,7 @@ func (ec *executionContext) _Query_getDataEntry(ctx context.Context, field graph
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetDataEntry(rctx, fc.Args["id"].(string))
+		return ec.resolvers.Query().GetDataEntry(rctx, fc.Args["query"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

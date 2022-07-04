@@ -15,7 +15,7 @@ var saveQuery = fmt.Sprintf("INSERT INTO %s (%s) VALUES ($1,$2,$3,$4,$5) RETURNI
 //var updateQuery = fmt.Sprintf("UPDATE %s SET status = $1, modified = CURRENT_TIMESTAMP, modified_by = $2 WHERE service_tag = $3 RETURNING %s;", repositoryTableName, returnFields)
 var updateQuery = fmt.Sprintf("UPDATE %s SET status = $1, modified = CURRENT_TIMESTAMP, modified_by = $2 WHERE service_tag = $3;", repositoryTableName)
 var getQuery = fmt.Sprintf("SELECT %s FROM %s;", returnFields, repositoryTableName)
-var getByIdQuery = fmt.Sprintf("SELECT %s FROM %s WHERE id = $1;", returnFields, repositoryTableName)
+var getByQuery = fmt.Sprintf("SELECT %s FROM %s WHERE", returnFields, repositoryTableName)
 
 const (
 	repositoryTableName = "dataentries"
@@ -89,13 +89,13 @@ func (repo *databaseRepository) Get(ctx context.Context) (data []*generatedModel
 	return dataEntries, e
 }
 
-func (repo *databaseRepository) GetById(ctx context.Context, id string) (data *generatedModel.DataEntry, err error) {
+func (repo *databaseRepository) GetById(ctx context.Context, query string) (data *generatedModel.DataEntry, err error) {
 	var retId string
 	var title string
 	var content string
 	var views int
 	var timestamp string
-	e := repo.con.QueryRow(getByIdQuery, id).Scan(&retId, &title, &content, &views, &timestamp)
+	e := repo.con.QueryRow(fmt.Sprintf("%s %s;", getByQuery, query)).Scan(&retId, &title, &content, &views, &timestamp)
 
 	if e != nil {
 		// handle this error better than this

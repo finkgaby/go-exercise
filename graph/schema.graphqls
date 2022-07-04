@@ -17,7 +17,7 @@ input InputDataEntry {
 
 type Query {
   getDataEntries: [DataEntry!]!
-  getDataEntry(id: String!): DataEntry!
+  getDataEntry(query: String!): DataEntry!
 
 }
 

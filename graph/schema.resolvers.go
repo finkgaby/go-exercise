@@ -6,6 +6,7 @@ package graph
 import (
 	"Exercise/graph/generated"
 	"Exercise/graph/model"
+	srv "Exercise/server"
 	"Exercise/server/commons"
 	"Exercise/server/repositories"
 	"context"
@@ -49,18 +50,15 @@ func (r *queryResolver) GetDataEntries(ctx context.Context) ([]*model.DataEntry,
 	return retValur, nil
 }
 
-func (r *queryResolver) GetDataEntry(ctx context.Context, id string) (*model.DataEntry, error) {
-
-	//TODO:
-	//query := cmns.QuerySerialize("")
-
+func (r *queryResolver) GetDataEntry(ctx context.Context, query string) (*model.DataEntry, error) {
+	query = srv.QuerySerialize(query)
 	rep, err := repositories.GetRepository(commons.RepositoryTypeDB)
 	if err != nil {
 		log.Fatal(ctx, err, "Unable to get repository")
 	}
 
 	var dataEntry *model.DataEntry
-	dataEntry, _ = rep.GetById(ctx, id)
+	dataEntry, _ = rep.GetById(ctx, query)
 	return dataEntry, nil
 }
 
