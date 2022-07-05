@@ -95,9 +95,10 @@ func (repo *databaseRepository) GetById(ctx context.Context, query string) (data
 	var content string
 	var views int
 	var timestamp string
+
 	e := repo.con.QueryRow(fmt.Sprintf("%s %s;", getByQuery, query)).Scan(&retId, &title, &content, &views, &timestamp)
 
-	if e != nil {
+	if e != nil && e != sql.ErrNoRows {
 		// handle this error better than this
 		panic(e)
 	}
