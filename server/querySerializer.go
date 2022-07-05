@@ -20,9 +20,8 @@ type Query struct {
 }
 
 func QuerySerialize(queryToSerialize string) string {
-	var serializedQuery string
 	log.Println("Connect to NATS")
-	nc, _ := nats.Connect("demo.nats.io")
+	nc, _ := nats.Connect("localhost:4222")
 	log.Println("Creates JetStreamContext")
 	js, err := nc.JetStream()
 	checkErr(err)
@@ -49,14 +48,13 @@ func QuerySerialize(queryToSerialize string) string {
 		msgs, _ := sub.Fetch(1, nats.Context(ctx))
 		for _, msg := range msgs {
 			msg.Ack()
-			err := json.Unmarshal(msg.Data, &serializedQuery)
+			var query Query
+			err := json.Unmarshal(msg.Data, &query)
 			checkErr(err)
 			log.Printf("Subscriber fetched msg.Data:%s from subSubjectName:%q", string(msg.Data), msg.Subject)
-			return serializedQuery
+			return query.Query
 		}
 	}
-
-	return serializedQuery
 }
 
 func checkErr(err error) {
