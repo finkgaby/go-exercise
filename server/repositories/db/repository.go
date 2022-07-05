@@ -121,8 +121,7 @@ func (repo *databaseRepository) Update(ctx context.Context, model interface{}) (
 
 func parseEnv() Config {
 	return Config{
-		//Host:     "localhost",
-		Host:     "postgres",
+		Host:     commons.DatabaseHost,
 		Port:     "5432",
 		User:     "postgres",
 		Password: "123456",

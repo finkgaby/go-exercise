@@ -1,6 +1,7 @@
 package server
 
 import (
+	"Exercise/server/commons"
 	"context"
 	"encoding/json"
 	"github.com/google/uuid"
@@ -21,8 +22,7 @@ type Query struct {
 
 func QuerySerialize(queryToSerialize string) string {
 	log.Println("Connect to NATS")
-	//nc, _ := nats.Connect("localhost:4222")
-	nc, _ := nats.Connect("nats:4222")
+	nc, _ := nats.Connect(commons.NatsUrl)
 	log.Println("Creates JetStreamContext")
 	js, err := nc.JetStream()
 	checkErr(err)
