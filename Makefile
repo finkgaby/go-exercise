@@ -14,7 +14,7 @@ build:
 install:
 	$(HELM) install --create-namespace -n $(NAMESPACE) $(NAME) ./chart/exercise
 
-all: build install
+
 
 rmi:
 	nerdctl rmi -f --namespace k8s.io exercise:v1.1
@@ -24,5 +24,6 @@ uninstall:
 
 all-remove: uninstall rmi
 
+all: uninstall build install
 
 .PHONY : help install uninstall

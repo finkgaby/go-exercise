@@ -31,12 +31,13 @@ func QuerySerialize(queryToSerialize string) string {
 		Query:     queryToSerialize,
 		SubjectId: uuid.New().String(),
 	}
-	queryJSON, err := json.Marshal(query)
+	queryJSON, err := json.Marshal(query.Query)
 	js.Publish(pubSubjectName, queryJSON)
 
 	log.Printf("Published queryJSON:%s to subjectName:%q", string(queryJSON), pubSubjectName)
 
 	sub, _ := js.PullSubscribe(subSubjectName, "queryReviewSubscriber", nats.PullMaxWaiting(1))
+
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -49,11 +50,11 @@ func QuerySerialize(queryToSerialize string) string {
 		msgs, _ := sub.Fetch(1, nats.Context(ctx))
 		for _, msg := range msgs {
 			msg.Ack()
-			var query Query
+			var query string
 			err := json.Unmarshal(msg.Data, &query)
 			checkErr(err)
 			log.Printf("Subscriber fetched msg.Data:%s from subSubjectName:%q", string(msg.Data), msg.Subject)
-			return query.Query
+			return query
 		}
 	}
 }
